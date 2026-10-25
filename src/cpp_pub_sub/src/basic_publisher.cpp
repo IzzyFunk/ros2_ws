@@ -11,9 +11,20 @@ using namespace std::chrono_literals;
 class BasicPublisher : public rclcpp::Node {
 public:
     BasicPublisher() : Node("basic_publisher"), count_(0) {
+
+        // 1. Declare the parameter FIRST
+        this->declare_parameter("custom_timer_rate", 1.0);
+
+        // 2. Fetch the parameter value that was passed in by the launch file
+        double timer_rate = this->get_parameter("custom_timer_rate").as_double();
+
+        // 3. Initialize your publisher
         publisher_ = this->create_publisher<std_msgs::msg::String>("chatter", 10);
+        
+        // 4. Convert rate to ms and initialize timer using dynamic variable
+        auto timer_ms = std::chrono::milliseconds(static_cast<int>(1000 / timer_rate));
         timer_ = this->create_wall_timer(
-            500ms, std::bind(&BasicPublisher::timer_callback, this));
+            timer_ms, std::bind(&BasicPublisher::timer_callback, this));
     }
 
 private:
