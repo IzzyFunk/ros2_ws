@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="differential_rover">
+
+	<!-- Base Link: The main chassis of the rover -->
+	<link name="base_link">
+		
+		<!-- Visual: What you see in RViz and Gazebo -->
+		<visual>
+			<origin xyz="0 0 0.15" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.6 0.4 0.1"/>
+			</geometry>
+			<material name="blue">
+				<color rgba="0.0 0.0 0.8 1.0"/>
+			</material>
+		</visual>
+
+		<!-- Collision: The simplified bounding box for the physics engine -->
+		<collision>
+			<origin xyz="0 0 0.15" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.6 0.4 0.1"/>
+			</geometry>
+		</collision>
+
+	</link>
+	
+	<!-- Wheel Macro -->
+	<xacro:macro name="wheel" params="prefix y_reflect">
+		<link name="${prefix}_wheel">
+			<visual>
+				<!-- Rotate the cylinder 90 degrees (1.5708 rad) to lay flat as a wheel -->
+				<origin xyz="0 0 0" rpy="1.5708 0 0"/>
+				<geometry>
+					<cylinder radius="0.1" length="0.05"/>
+				</geometry>
+				<material name="black">
+					<color rgba="0.1 0.1 0.1 1.0"/>
+				</material>
+			</visual>
+			<collision>
+				<origin xyz="0 0 0" rpy="1.5708 0 0"/>
+				<geometry>
+					<cylinder radius="0.1" length="0.05"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Continuous joint allows infinite rotation for driving -->
+		<joint name="${prefix}_wheel_joint" type="continuous">
+			<parent link="base_link"/>
+			<child link="${prefix}_wheel"/>
+			<origin xyz="-0.2 ${y_reflect * 0.225} 0.1" rpy="0 0 0"/>
+			<axis xyz="0 1 0"/>
+		</joint>
+	</xacro:macro>
+
+	<!-- Instantiate Left and Right Wheels -->
+	<xacro:wheel prefix="left" y_reflect="1" />
+	<xacro:wheel prefix="right" y_reflect="-1" />
+
+    <!-- Caster Wheel -->
+	<link name="caster_wheel">
+		<visual>
+			<geometry>
+				<sphere radius="0.05"/>
+			</geometry>
+			<material name="black"/>
+		</visual>
+		<collision>
+			<geometry>
+				<sphere radius="0.05"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="caster_joint" type="fixed">
+		<parent link="base_link"/>
+		<child link="caster_wheel"/>
+		<origin xyz="0.2 0 0.05" rpy="0 0 0"/>
+	</joint>
+
+</robot>
