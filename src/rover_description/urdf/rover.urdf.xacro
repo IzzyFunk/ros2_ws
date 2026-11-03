@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="differential_rover">
 
 	<!-- Base Link: The main chassis of the rover -->
@@ -69,6 +70,15 @@
 			<origin xyz="-0.2 ${y_reflect * 0.225} 0.1" rpy="0 0 0"/>
 			<axis xyz="0 1 0"/>
 		</joint>
+
+		<!-- Defines driving wheel characteristics -->
+		<gazebo reference="${prefix}_wheel">
+			<mu1>1.0</mu1>
+			<mu2>1.0</mu2>
+			<kp>1000000.0</kp>
+			<kd>100.0</kd>
+		</gazebo>
+
 	</xacro:macro>
 
 	<!-- Instantiate Left and Right Wheels -->
@@ -99,10 +109,30 @@
 		
 	</link>
 
+	<!-- Defines caster wheel characteristics -->
+	<gazebo reference="caster_wheel">
+		<mu1>0.0</mu1>
+		<mu2>0.0</mu2>
+		<kp>1000000.0</kp>
+		<kd>100.0</kd>
+	</gazebo>
+
 	<joint name="caster_joint" type="fixed">
 		<parent link="base_link"/>
 		<child link="caster_wheel"/>
 		<origin xyz="0.2 0 0.05" rpy="0 0 0"/>
 	</joint>
+
+	<!-- Defines motors for driving wheels -->
+	<gazebo>
+		<plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+			<left_joint>left_wheel_joint</left_joint>
+			<right_joint>right_wheel_joint</right_joint>
+			<wheel_separation>0.45</wheel_separation>
+			<wheel_radius>0.1</wheel_radius>
+			<odom_publish_frequency>30</odom_publish_frequency>
+			<topic>cmd_vel</topic>
+		</plugin>
+	</gazebo>
 
 </robot>
