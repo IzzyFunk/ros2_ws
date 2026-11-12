@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /LaserScan1
         - /TF1/Tree1
-        - /TF1/Tree1/base_link1
       Splitter Ratio: 0.5
     Tree Height: 1033
   - Class: rviz_common/Selection
@@ -105,27 +104,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_link:
-          Value: true
-        camera_link:
-          Value: true
-        caster_wheel:
-          Value: true
-        lidar_link:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        base_link:
-          camera_link:
-            {}
-          caster_wheel:
-            {}
-          lidar_link:
-            {}
+        {}
       Update Interval: 0
       Value: true
   Enabled: true
