@@ -31,6 +31,10 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         arguments=['-d', os.path.join(pkg_share, 'rviz', 'rover.rviz')],
+        additional_env={
+            'QT_SCREEN_SCALE_FACTORS': '1',
+            'QT_ENABLE_HIGHDPI_SCALING': '0'
+        },
         output='screen'
     )
     
